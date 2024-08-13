@@ -16,7 +16,7 @@ app.use(cors());
 //   res.send("Hello World!");
 // });
 
-app.use('/',usersRoute)
+app.use('/api/users',usersRoute)
 
 mongoose
   .connect(process.env.URI)

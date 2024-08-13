@@ -6,7 +6,7 @@ import Users from '../models/userModel.js'//buvo reikalingas testavimui
 
 const router = express.Router()
 // visi useriai
-router.get("/users", controller.getUsers); 
+router.get("/", controller.getUsers); 
 
 // laikinas kurimas
 
@@ -29,10 +29,10 @@ router.get("/users", controller.getUsers);
 //     })
 
 // login route
-router.post('/login', loginUser)
+router.post("/login", loginUser)
 
 // signup route
-router.post('/register', signupUser)
+router.post("/register", signupUser)
 
 
 export default router
