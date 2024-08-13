@@ -1,18 +1,27 @@
 import express from "express";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
+dotenv.config();
 
 //express app
 const app = express();
 
 //middleware
 app.use(express.json());
-
-const port = 3000;
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+mongoose
+  .connect(process.env.URI)
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
