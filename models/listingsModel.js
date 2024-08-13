@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 const equipmentSchema = new Schema(
   {
-    _id: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     photos: { type: Array, required: true },

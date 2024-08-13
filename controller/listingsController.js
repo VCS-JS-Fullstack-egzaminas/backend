@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 //GET - get all listings
 
 export const getListings = async (req, res) => {
-  const listings = await Listings.find({ _id: listing_id }).sort({
+  const listings = await Listings.find({}).sort({
     createdAt: -1,
   });
   res.status(200).json(listings);
