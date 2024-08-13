@@ -23,9 +23,9 @@ userSchema.statics.signup = async function(email, password,username) {
     if(!validator.isEmail(email)) {
         throw Error('El. paštas jau egzistuoja.')
     }
-    if(!validator.isStrongPassword(password)) {
+    if(!validator.isStrongPassword(password,{minLength:5,minUppercase:1,minNumbers:1,minSymbols:0})) {
         throw Error('Slaptažodis pernelyg silpnas.')
-    }
+    } //Passwordo parametrai dar keiciami
 
     const exists = await this.findOne({email})
     if(exists) {
@@ -39,7 +39,7 @@ userSchema.statics.signup = async function(email, password,username) {
 }
 
 userSchema.statics.login = async function(email, password) {
-    if(!email || !password) {
+    if(!email || !password ||!username) {
         throw Error('Visi laukeliai privalomi.')
     }
     const user = await this.findOne({email})
