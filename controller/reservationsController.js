@@ -130,20 +130,71 @@ export const createReservation = async (req, res) => {
 
 export const updateReservation = async (req, res) => {
   const { id } = req.params;
+  const { start, end, listing } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "Invalid ID" });
+    return res.status(404).json({ error: "Invalid reservation ID" });
   }
 
-  const reservation = await Reservations.findOneAndUpdate(
-    { _id: id },
-    { ...req.body }
-  );
-  if (!reservation) {
-    return res.status(404).json({ error: "No such reservation" });
-  }
+  try {
+    // Validate listing ID if provided
+    if (listing && !mongoose.Types.ObjectId.isValid(listing)) {
+      return res.status(400).json({ error: "Invalid listing ID" });
+    }
 
-  res.status(200).json(reservation);
+    // Validate and process dates if provided
+    if (start || end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+
+      if (isNaN(startDate) || isNaN(endDate)) {
+        return res.status(400).json({ error: "Invalid date format" });
+      }
+
+      if (endDate <= startDate) {
+        return res
+          .status(400)
+          .json({ error: "'End' date must be after 'start' date" });
+      }
+
+      const reservationToUpdate = await Reservations.findById(id);
+
+      if (!reservationToUpdate) {
+        return res.status(404).json({ error: "No such reservation" });
+      }
+
+      // Check for overlapping reservations if dates or listing is updated
+      const overlappingReservation = await Reservations.findOne({
+        listing: listing || reservationToUpdate.listing,
+        _id: { $ne: id },
+        $or: [
+          { start: { $lt: endDate }, end: { $gt: startDate } },
+          { start: { $eq: startDate } },
+          { end: { $eq: endDate } },
+        ],
+      });
+
+      if (overlappingReservation) {
+        return res.status(400).json({
+          error: "The listing is already reserved for the selected dates",
+        });
+      }
+    }
+
+    const updatedReservation = await Reservations.findOneAndUpdate(
+      { _id: id },
+      { ...req.body },
+      { new: true } // return the updated document
+    );
+
+    if (!updatedReservation) {
+      return res.status(404).json({ error: "No such reservation" });
+    }
+
+    res.status(200).json(updatedReservation);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 //DELETE - delete a reservation
@@ -152,14 +203,32 @@ export const deleteReservation = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "Invalid ID" });
+    return res.status(404).json({ error: "Invalid reservation ID" });
   }
 
-  const reservation = await Reservations.findOneAndDelete({ _id: id });
+  try {
+    const reservation = await Reservations.findOneAndDelete({ _id: id });
 
-  if (!reservation) {
-    return res.status(404).json({ error: "No such reservation" });
+    if (!reservation) {
+      return res.status(404).json({ error: "No such reservation" });
+    }
+
+    // After deleting the reservation, check if any other reservations exist for the listing.
+    // If no other reservations exist, mark the listing as available.
+    const existingReservations = await Reservations.findOne({
+      listing: reservation.listing,
+    });
+
+    if (!existingReservations) {
+      const listingData = await Listings.findById(reservation.listing);
+      if (listingData) {
+        listingData.available = true;
+        await listingData.save();
+      }
+    }
+
+    res.status(200).json(reservation);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-
-  res.status(200).json(reservation);
 };
