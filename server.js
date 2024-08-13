@@ -1,15 +1,30 @@
-const express = require("express")
-const app = express()
-const mongoose = require('mongoose')
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from 'dotenv'
+import cors from "cors";
+import usersRoute from "./routes/usersRoute.js";
+dotenv.config();
 
-const dbURI = 'mongodb+srv://robertgenovas:PJW1tjM6QS2fAhxd@cluster0.bj026oy.mongodb.net/Reservation_Web'
+//express app
+const app = express();
 
-mongoose.connect(dbURI)
-    .then(result => {
-        app.listen(3000)
-        console.log('Connected to MongoDB')
-    })
-    .catch(err => console.log(err))
+//middleware
+app.use(express.json());
+app.use(cors());
 
-    app.use(express.json())
+// app.get("/", (req, res) => {
+//   res.send("Hello World!");
+// });
 
+app.use('/',usersRoute)
+
+mongoose
+  .connect(process.env.URI)
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
