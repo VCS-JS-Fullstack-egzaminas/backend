@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import listings from "./routes/listings.js";
+import reservations from "./routes/reservations.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(cors());
 
 //routes
 app.use("/api/listings", listings);
+app.use("/api/reservations", reservations);
 
 //connect to db
 mongoose
