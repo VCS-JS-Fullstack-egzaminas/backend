@@ -39,7 +39,7 @@ userSchema.statics.signup = async function(email, password,username) {
 }
 
 userSchema.statics.login = async function(email, password) {
-    if(!email || !password ||!username) {
+    if(!email || !password ) {
         throw Error('Visi laukeliai privalomi.')
     }
     const user = await this.findOne({email})
