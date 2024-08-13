@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const equipmentSchema = new Schema(
+const listingSchema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -16,4 +16,4 @@ const equipmentSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Listings", equipmentSchema);
+export default mongoose.model("Listings", listingSchema);

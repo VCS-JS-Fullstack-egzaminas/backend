@@ -88,7 +88,7 @@ export const createListing = async (req, res) => {
   }
 };
 
-//UPDATE - update a listing
+//PATCH - update a listing
 
 export const updateListing = async (req, res) => {
   const { id } = req.params;
