@@ -1,38 +1,29 @@
 import express from "express"
-import * as controller from "../controller/usersController.js"
-import { loginUser,signupUser } from "../controller/usersController.js"
+import { loginUser,signupUser,deleteUser,updateUser,getUser,getUsers } from "../controller/usersController.js"
+import requireAuth  from "../middleware/requireAuth.js"
 
-import Users from '../models/userModel.js'//buvo reikalingas testavimui
+
 
 const router = express.Router()
+router.use(requireAuth) //uzkomentuoti jeigu norit tikrinti kitaip reikalaus tokeno
 // visi useriai
-router.get("/", controller.getUsers); 
+router.get("/", getUsers); 
 
-// laikinas kurimas
+// vienas useris
 
-// router.post('/', async (req,res) => {
-//     const user = new Users({
-//         email:req.body.email,
-//         password:req.body.password,
-//         username: req.body.username,
-//         role:"admin"
-     
-//     })
-//     try {
-//         const newUser  = await user.save()
-//         res.status(201).json(newUser)
-
-//     } catch (err) {
-//         res.status(400).json({message: err.message})
-//     }
-        
-//     })
-
+router.get("/:id", getUser); 
 // login route
 router.post("/login", loginUser)
 
 // signup route
 router.post("/register", signupUser)
 
+
+// delete route
+
+router.delete("/:id", deleteUser)
+
+// patch route
+router.patch("/:id", updateUser)
 
 export default router
