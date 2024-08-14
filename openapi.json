@@ -258,6 +258,170 @@
           }
         }
       }
+    },
+    "/api/reservations": {
+      "get": {
+        "summary": "Returns the list of all reservations",
+        "tags": ["Reservations"],
+        "responses": {
+          "200": {
+            "description": "The list of reservations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reservation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new reservation",
+        "tags": ["Reservations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created reservation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reservations/{id}": {
+      "get": {
+        "summary": "Get the reservation by id",
+        "tags": ["Reservations"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The reservation id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The reservation description by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update the reservation by the id",
+        "tags": ["Reservations"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The reservation id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The reservation was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove the reservation by id",
+        "tags": ["Reservations"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The reservation id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The reservation was deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -265,213 +429,123 @@
       "User": {
         "type": "object",
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "The auto-generated ID of the user"
-          },
-          "email": {
-            "type": "string",
-            "description": "The email of the user"
+          "id": {
+            "type": "string"
           },
           "username": {
-            "type": "string",
-            "description": "The username of the user"
+            "type": "string"
           },
-          "createdAt": {
-            "type": "string",
-            "format": "date",
-            "description": "The date the user was created"
+          "email": {
+            "type": "string"
           }
-        },
-        "example": {
-          "_id": "66b464fd46bb6822133bdc4d",
-          "email": "user@example.com",
-          "username": "john_doe",
-          "createdAt": "2023-08-14T04:05:06.157Z"
         }
       },
       "LoginInput": {
         "type": "object",
-        "required": ["email", "password"],
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "The email of the user"
+          "username": {
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "description": "The password of the user"
+            "type": "string"
           }
-        },
-        "example": {
-          "email": "user@example.com",
-          "password": "password123"
         }
       },
       "SignupInput": {
         "type": "object",
-        "required": ["email", "password", "username"],
         "properties": {
+          "username": {
+            "type": "string"
+          },
           "email": {
-            "type": "string",
-            "description": "The email of the user"
+            "type": "string"
           },
           "password": {
-            "type": "string",
-            "description": "The password of the user"
-          },
-          "username": {
-            "type": "string",
-            "description": "The username of the user"
+            "type": "string"
           }
-        },
-        "example": {
-          "email": "newuser@example.com",
-          "password": "password123",
-          "username": "new_user"
         }
       },
       "AuthResponse": {
         "type": "object",
         "properties": {
           "email": {
-            "type": "string",
-            "description": "The email of the user"
+            "type": "string"
           },
           "token": {
-            "type": "string",
-            "description": "The JWT token"
+            "type": "string"
           }
-        },
-        "example": {
-          "email": "user@example.com",
-          "token": "jwt-token-here"
         }
       },
       "Listing": {
         "type": "object",
-        "required": [
-          "title",
-          "description",
-          "photos",
-          "price",
-          "available",
-          "min_duration",
-          "max_duration",
-          "extras"
-        ],
         "properties": {
-          "_id": {
-            "type": "string",
-            "description": "The auto-generated id of the listing"
+          "id": {
+            "type": "string"
           },
           "title": {
-            "type": "string",
-            "description": "The title of the listing"
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "description": "The description of the listing"
+            "type": "string"
           },
           "photos": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "The photos of the listing"
+            }
           },
           "price": {
-            "type": "number",
-            "description": "The price per day"
+            "type": "number"
           },
           "available": {
-            "type": "boolean",
-            "description": "Is listing available for rent"
+            "type": "boolean"
           },
           "min_duration": {
-            "type": "number",
-            "description": "The minimum available rent duration"
+            "type": "integer"
           },
           "max_duration": {
-            "type": "number",
-            "description": "The maximum available rent duration"
+            "type": "integer"
           },
           "extras": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "The extras of the listing"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date",
-            "description": "The date the listing was added"
+            }
           }
-        },
-        "example": {
-          "_id": "66b464fd46bb6822133bdc4d",
-          "title": "Volkswagen Golf",
-          "description": "2024 Volkswagen Golf 2.0TSI",
-          "photos": ["img1.jpg", "img2.jpg"],
-          "price": 32,
-          "available": true,
-          "min_duration": 2,
-          "max_duration": 60,
-          "extras": ["vaiko kėdutė", "maišas slidėms"],
-          "createdAt": "2020-03-10T04:05:06.157Z"
         }
       },
       "ListingInput": {
         "type": "object",
-        "required": [
-          "title",
-          "description",
-          "photos",
-          "price",
-          "available",
-          "min_duration",
-          "max_duration",
-          "extras"
-        ],
         "properties": {
           "title": {
-            "type": "string",
-            "description": "The title of the listing"
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "description": "The description of the listing"
+            "type": "string"
           },
           "photos": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "The photos of the listing"
+            }
           },
           "price": {
-            "type": "number",
-            "description": "The price per day"
+            "type": "number"
           },
           "available": {
-            "type": "boolean",
-            "description": "Is listing available for rent"
+            "type": "boolean"
           },
           "min_duration": {
-            "type": "number",
-            "description": "The minimum available rent duration"
+            "type": "integer"
           },
           "max_duration": {
-            "type": "number",
-            "description": "The maximum available rent duration"
+            "type": "integer"
           },
           "extras": {
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "The extras of the listing"
+            }
           }
         },
         "example": {
@@ -484,41 +558,73 @@
           "max_duration": 60,
           "extras": ["vaiko kėdutė", "maišas slidėms"]
         }
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "listing_id": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "total_price": {
+            "type": "number"
+          }
+        }
+      },
+      "ReservationInput": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "listing_id": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "total_price": {
+            "type": "number"
+          }
+        }
       }
     },
     "responses": {
-      "NotFound": {
-        "description": "The specified resource was not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "InvalidID": {
-        "description": "The specified ID is not valid",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
       "BadRequest": {
         "description": "Invalid request parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
         "content": {
           "application/json": {
             "schema": {
