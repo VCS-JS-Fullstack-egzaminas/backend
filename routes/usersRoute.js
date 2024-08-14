@@ -1,9 +1,11 @@
 import express from "express"
 import { loginUser,signupUser,deleteUser,updateUser,getUser,getUsers } from "../controller/usersController.js"
+import requireAuth  from "../middleware/requireAuth.js"
 
 
 
 const router = express.Router()
+router.use(requireAuth) //uzkomentuoti jeigu norit tikrinti kitaip reikalaus tokeno
 // visi useriai
 router.get("/", getUsers); 
 
