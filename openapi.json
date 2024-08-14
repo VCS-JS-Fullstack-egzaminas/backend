@@ -468,11 +468,11 @@
       "AuthResponse": {
         "type": "object",
         "properties": {
-          "token": {
+          "email": {
             "type": "string"
           },
-          "user": {
-            "$ref": "#/components/schemas/User"
+          "token": {
+            "type": "string"
           }
         }
       },
