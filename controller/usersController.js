@@ -1,8 +1,16 @@
 import Users from "../models/userModel.js";
 import mongoose from "mongoose";
 import { signToken } from "../utils/jwt.js";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const maxAge = 3 * 24 * 60 * 60;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+const maxAge = process.env.JWT_MAX_AGE || 172800;
 
 // GET - all users
 export const getUsers = async (req, res) => {

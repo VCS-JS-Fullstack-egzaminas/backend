@@ -9,15 +9,16 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const secret = process.env.SECRET;
+const maxAge = process.env.JWT_MAX_AGE || 172800;
 
 if (!secret) {
-  console.log("JWT secret is missing in .env");
+  console.log("SECRET is not defined in environment variables");
   process.exit(1);
 }
 
 export const signToken = (id, role = "user") => {
   return jwt.sign({ id, role }, secret, {
-    expiresIn: "2d",
+    expiresIn: maxAge,
   });
 };
 
