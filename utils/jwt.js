@@ -18,7 +18,7 @@ if (!secret) {
 
 export const signToken = (id, role = "user") => {
   return jwt.sign({ id, role }, secret, {
-    expiresIn: maxAge,
+    expiresIn: `${maxAge}s`,
   });
 };
 
