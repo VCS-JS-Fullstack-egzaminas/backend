@@ -2,7 +2,6 @@ import Listings from "../models/listingsModel.js";
 import mongoose from "mongoose";
 
 //GET - get all listings
-
 export const getListings = async (req, res) => {
   const listings = await Listings.find({}).sort({
     createdAt: -1,
@@ -27,7 +26,6 @@ export const getListing = async (req, res) => {
 };
 
 //POST - create new listing
-
 export const createListing = async (req, res) => {
   const {
     title,
@@ -89,7 +87,6 @@ export const createListing = async (req, res) => {
 };
 
 //PATCH - update a listing
-
 export const updateListing = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -105,7 +102,6 @@ export const updateListing = async (req, res) => {
 };
 
 //DELETE - delete a listing
-
 export const deleteListing = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./openapi.json" assert { type: "json" };
 
@@ -19,6 +20,7 @@ const app = express();
 //middleware
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //routes

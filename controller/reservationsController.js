@@ -28,7 +28,6 @@ export const getReservation = async (req, res) => {
 };
 
 //POST - create new reservation
-
 export const createReservation = async (req, res) => {
   const { listing, start, end } = req.body;
   let emptyFields = [];
@@ -126,8 +125,8 @@ export const createReservation = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-//PATCH - update a reservation
 
+//PATCH - update a reservation
 export const updateReservation = async (req, res) => {
   const { id } = req.params;
   const { start, end, listing } = req.body;
@@ -198,7 +197,6 @@ export const updateReservation = async (req, res) => {
 };
 
 //DELETE - delete a reservation
-
 export const deleteReservation = async (req, res) => {
   const { id } = req.params;
 

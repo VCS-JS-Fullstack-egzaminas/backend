@@ -1,21 +1,33 @@
 import express from "express";
 import * as controller from "../controller/reservationsController.js";
+import requireAuth from "../middleware/authenticationMiddleware.js";
+import requireAdminAuthorization from "../middleware/authorizationMiddleware.js";
 
 const router = express.Router();
 
-// GET - get all listings
-router.get("/", controller.getReservations);
+// GET - get all reservations
+router.get(
+  "/",
+  requireAuth,
+  requireAdminAuthorization,
+  controller.getReservations
+);
 
-// GET - get a single listing
-router.get("/:id", controller.getReservation);
+// GET - get a single reservation
+router.get("/:id", requireAuth, controller.getReservation);
 
-// POST - create new listing
-router.post("/", controller.createReservation);
+// POST - create new reservation
+router.post("/", requireAuth, controller.createReservation);
 
-// PATCH - update a listing
-router.patch("/:id", controller.updateReservation);
+// PATCH - update a reservation
+router.patch("/:id", requireAuth, controller.updateReservation);
 
-// DELETE - delete a listing
-router.delete("/:id", controller.deleteReservation);
+// DELETE - delete a reservation
+router.delete(
+  "/:id",
+  requireAuth,
+  requireAdminAuthorization,
+  controller.deleteReservation
+);
 
 export default router;
