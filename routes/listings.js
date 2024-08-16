@@ -1,5 +1,7 @@
 import express from "express";
 import * as controller from "../controller/listingsController.js";
+import requireAuth from "../middleware/authenticationMiddleware.js";
+import requireAdminAuthorization from "../middleware/authorizationMiddleware.js";
 
 const router = express.Router();
 
@@ -10,12 +12,27 @@ router.get("/", controller.getListings);
 router.get("/:id", controller.getListing);
 
 // POST - create new listing
-router.post("/", controller.createListing);
+router.post(
+  "/",
+  requireAuth,
+  requireAdminAuthorization,
+  controller.createListing
+);
 
 // PATCH - update a listing
-router.patch("/:id", controller.updateListing);
+router.patch(
+  "/:id",
+  requireAuth,
+  requireAdminAuthorization,
+  controller.updateListing
+);
 
 // DELETE - delete a listing
-router.delete("/:id", controller.deleteListing);
+router.delete(
+  "/:id",
+  requireAuth,
+  requireAdminAuthorization,
+  controller.deleteListing
+);
 
 export default router;
