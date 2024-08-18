@@ -7,14 +7,23 @@ import {
   getUser,
   getUsers,
   logoutUser,
+  checkAuth,
+  checkCookie,
 } from "../controller/usersController.js";
-import requireAuth from "../middleware/authenticationMiddleware.js";
+import requireAuth, {
+  addUserToRequest,
+} from "../middleware/authenticationMiddleware.js";
 import requireAdminAuthorization from "../middleware/authorizationMiddleware.js";
+import { verifyToken } from "../utils/jwt.js";
 
 const router = express.Router();
 
 // visi useriai
 router.get("/", requireAuth, requireAdminAuthorization, getUsers);
+
+router.get("/check-cookie", checkCookie);
+
+router.get("/check-auth", addUserToRequest, checkAuth);
 
 // vienas useris
 router.get("/:id", requireAuth, requireAdminAuthorization, getUser);
