@@ -36,6 +36,8 @@ export const createListing = async (req, res) => {
     min_duration,
     max_duration,
     extras,
+    year,
+    size,
   } = req.body;
   let emptyFields = [];
 
@@ -63,6 +65,12 @@ export const createListing = async (req, res) => {
   if (!extras) {
     emptyFields.push("extras");
   }
+  if (!year) {
+    emptyFields.push("year");
+  }
+  if (!size) {
+    emptyFields.push("size");
+  }
 
   if (emptyFields.length > 0) {
     return res
@@ -79,6 +87,8 @@ export const createListing = async (req, res) => {
       min_duration,
       max_duration,
       extras,
+      year,
+      size,
     });
     res.status(200).json(listing);
   } catch (error) {
