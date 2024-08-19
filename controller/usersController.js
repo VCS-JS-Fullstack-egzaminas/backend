@@ -1,6 +1,6 @@
 import Users from "../models/userModel.js";
 import mongoose from "mongoose";
-import { signToken } from "../utils/jwt.js";
+import { signToken, verifyToken } from "../utils/jwt.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -107,6 +107,7 @@ export const checkCookie = async (req, res) => {
   const token = req.cookies.jwt;
 
   if (!token) {
+    return res.status(200).json({ isValid: false });
   }
 
   try {
@@ -116,6 +117,7 @@ export const checkCookie = async (req, res) => {
       return res.status(200).json({ isValid: false });
     }
   } catch (error) {
+    console.log(error);
     return res.status(200).json({ isValid: false });
   }
 

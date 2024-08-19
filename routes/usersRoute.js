@@ -14,7 +14,6 @@ import requireAuth, {
   addUserToRequest,
 } from "../middleware/authenticationMiddleware.js";
 import requireAdminAuthorization from "../middleware/authorizationMiddleware.js";
-import { verifyToken } from "../utils/jwt.js";
 
 const router = express.Router();
 
