@@ -1,6 +1,6 @@
 import Users from "../models/userModel.js";
 import mongoose from "mongoose";
-import { signToken } from "../utils/jwt.js";
+import { signToken, verifyToken } from "../utils/jwt.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -91,4 +91,35 @@ export const updateUser = async (req, res) => {
 export const logoutUser = async (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
   res.sendStatus(200);
+};
+
+export const checkAuth = async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    return res.sendStatus(401);
+  }
+
+  res.send(user);
+};
+
+export const checkCookie = async (req, res) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(200).json({ isValid: false });
+  }
+
+  try {
+    const decoded = verifyToken(token);
+
+    if (!decoded) {
+      return res.status(200).json({ isValid: false });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(200).json({ isValid: false });
+  }
+
+  res.status(200).json({ isValid: true });
 };

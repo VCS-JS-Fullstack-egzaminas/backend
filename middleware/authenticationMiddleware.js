@@ -17,7 +17,7 @@ const requireAuth = async (req, res, next) => {
   next();
 };
 
-export const checkAuth = async (req, res, next) => {
+export const addUserToRequest = async (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
