@@ -11,7 +11,9 @@ const listingSchema = new Schema(
     available: { type: Boolean, required: true },
     min_duration: { type: Number, required: true },
     max_duration: { type: Number, required: true },
-    extras: { type: Array, required: true },
+    extras: { type: Array },
+    year:{type:Number, required:true},
+    size:{type:String, required:true}
   },
   { timestamps: true }
 );
