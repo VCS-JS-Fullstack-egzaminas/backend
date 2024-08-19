@@ -39,7 +39,11 @@ export const loginUser = async (req, res) => {
   try {
     const user = await Users.login(email, password);
     const token = signToken(user._id, user.role);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+      sameSite: "None",
+    });
     res.status(200).json({ email: user.email, username: user.username });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -52,7 +56,11 @@ export const signupUser = async (req, res) => {
   try {
     const user = await Users.signup(email, password, username);
     const token = signToken(user._id);
-    res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+      sameSite: "None",
+    });
     res
       .status(200)
       .json({ id: user._id, email: user.email, username: user.username });
