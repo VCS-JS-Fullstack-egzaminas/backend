@@ -23,7 +23,7 @@ const corsOrigin =
     : "http://localhost:5173";
 
 const corsOptions = {
-  origin: "http://141.136.44.49:80",
+  origin: "http://141.136.44.49",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
