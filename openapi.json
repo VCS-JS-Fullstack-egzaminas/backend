@@ -422,6 +422,203 @@
           }
         }
       }
+    },
+    "/api/uploads": {
+      "post": {
+        "summary": "Upload a file",
+        "tags": ["Uploads"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "filename": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/testimonials": {
+      "get": {
+        "summary": "Get all testimonials",
+        "tags": ["Testimonials"],
+        "responses": {
+          "200": {
+            "description": "List of all testimonials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Testimonial"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new testimonial",
+        "tags": ["Testimonials"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestimonialInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created testimonial.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testimonial"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/testimonials/{id}": {
+      "get": {
+        "summary": "Get a testimonial by id",
+        "tags": ["Testimonials"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The testimonial id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The testimonial description by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testimonial"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a testimonial by the id",
+        "tags": ["Testimonials"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The testimonial id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestimonialInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The testimonial was updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testimonial"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a testimonial by id",
+        "tags": ["Testimonials"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The testimonial id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The testimonial was deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Testimonial"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -605,11 +802,52 @@
             "type": "number"
           }
         }
+      },
+      "Testimonial": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "listing_id": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TestimonialInput": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "listing_id": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          }
+        }
       }
     },
     "responses": {
       "BadRequest": {
-        "description": "Invalid request parameters",
+        "description": "Bad request",
         "content": {
           "application/json": {
             "schema": {
@@ -617,6 +855,12 @@
               "properties": {
                 "error": {
                   "type": "string"
+                },
+                "emptyFields": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
