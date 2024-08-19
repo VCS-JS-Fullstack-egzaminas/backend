@@ -42,7 +42,7 @@ export const loginUser = async (req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      sameSite: "lax",
+      sameSite: "strict",
     });
     res.status(200).json({ email: user.email, username: user.username });
   } catch (error) {
@@ -59,7 +59,7 @@ export const signupUser = async (req, res) => {
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
-      sameSite: "lax",
+      sameSite: "strict",
     });
     res
       .status(200)
