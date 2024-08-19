@@ -17,8 +17,13 @@ dotenv.config();
 //express app
 const app = express();
 
+const corsOrigin =
+  process.env.MODE === "PRODUCTION"
+    ? "http://localhost:80"
+    : "http://localhost:5173";
+
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: corsOrigin,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
