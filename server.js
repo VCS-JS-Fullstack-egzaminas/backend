@@ -19,7 +19,7 @@ const app = express();
 
 const corsOrigin =
   process.env.MODE === "PRODUCTION"
-    ? "http://141.136.44.49"
+    ? ["http://vcsrentals.xyz", "http://141.136.44.49"]
     : "http://localhost:5173";
 
 const corsOptions = {
