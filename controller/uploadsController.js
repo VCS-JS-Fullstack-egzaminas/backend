@@ -6,7 +6,7 @@ export const uploadImages = async (req, res) => {
 
     const imageUrls = req.files.map((file) => file.path);
 
-    return res.status(200).json({ urls: imageUrls });
+    return res.status(200).json({ images: imageUrls });
   } catch (error) {
     console.error("Error in uploadImages controller:", error);
     return res.status(500).json({ error: "Internal Server Error" });
