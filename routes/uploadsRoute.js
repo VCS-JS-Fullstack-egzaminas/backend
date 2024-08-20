@@ -8,9 +8,9 @@ const router = express.Router();
 
 router.post(
   "/images",
-  upload.array("images"),
   requireAuth,
   requireAdminAuthorization,
+  upload.array("images", 5), // Allow up to 5 images
   uploadImages
 );
 

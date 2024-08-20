@@ -1,11 +1,14 @@
-export const uploadImages = (req, res) => {
-  const images = [];
-  const files = req.files;
+export const uploadImages = async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded" });
+    }
 
-  files.forEach((file) => {
-    const url = file.destination + file.filename;
-    images.push(url);
-  });
+    const imageUrls = req.files.map((file) => file.path);
 
-  res.status(200).json({ images: images });
+    return res.status(200).json({ urls: imageUrls });
+  } catch (error) {
+    console.error("Error in uploadImages controller:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 };
