@@ -117,8 +117,8 @@ export const createReservation = async (req, res) => {
     });
 
     // Mark listing as unavailable if the reservation is created
-    listingData.available = false;
-    await listingData.save();
+    // listingData.available = false;
+    // await listingData.save();
 
     res.status(200).json(reservation);
   } catch (error) {
@@ -229,4 +229,19 @@ export const deleteReservation = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+};
+
+export const getReservationsByListingId = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Invalid ID" });
+  }
+
+  const reservations = await Reservations.find({ listing: id });
+  if (!reservations) {
+    return res.status(404).json({ error: "No such reservation" });
+  }
+
+  res.status(200).json(reservations);
 };

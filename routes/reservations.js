@@ -13,6 +13,8 @@ router.get(
   controller.getReservations
 );
 
+router.get("/listing/:id", requireAuth, controller.getReservationsByListingId);
+
 // GET - get a single reservation
 router.get("/:id", requireAuth, controller.getReservation);
 
