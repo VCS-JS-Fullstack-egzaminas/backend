@@ -38,6 +38,8 @@ export const createListing = async (req, res) => {
     extras,
     year,
     size,
+    transmission,
+    fuelType
   } = req.body;
   let emptyFields = [];
 
@@ -71,6 +73,13 @@ export const createListing = async (req, res) => {
   if (!size) {
     emptyFields.push("size");
   }
+  if (!transmission) {
+    emptyFields.push("transmission");
+  }
+  if (!fuelType) {
+    emptyFields.push("fuelType");
+  }
+
 
   if (emptyFields.length > 0) {
     return res
@@ -89,6 +98,8 @@ export const createListing = async (req, res) => {
       extras,
       year,
       size,
+      transmission,
+      fuelType
     });
     res.status(200).json(listing);
   } catch (error) {
