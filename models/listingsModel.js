@@ -13,7 +13,9 @@ const listingSchema = new Schema(
     max_duration: { type: Number, required: true },
     extras: { type: Array },
     year:{type:Number, required:true},
-    size:{type:String, required:true}
+    size:{type:String, required:true},
+    transmission:{type:String, required:true},
+    fuelType:{type:String,required:true}
   },
   { timestamps: true }
 );
