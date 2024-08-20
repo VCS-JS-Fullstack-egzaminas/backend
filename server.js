@@ -19,11 +19,11 @@ const app = express();
 
 const corsOrigin =
   process.env.MODE === "PRODUCTION"
-    ? "http://localhost:80"
+    ? "http://141.136.44.49"
     : "http://localhost:5173";
 
 const corsOptions = {
-  origin: "http://141.136.44.49",
+  origin: corsOrigin,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
