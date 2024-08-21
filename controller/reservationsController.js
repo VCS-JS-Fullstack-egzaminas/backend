@@ -241,7 +241,7 @@ export const updateReservation = async (req, res) => {
       { _id: id },
       { ...req.body },
       { new: true } // return the updated document
-    );
+    ).populate("listing");
 
     if (!updatedReservation) {
       return res.status(404).json({ error: "No such reservation" });
