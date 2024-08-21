@@ -1,6 +1,8 @@
 import Reservations from "../models/reservationsModel.js";
 import Listings from "../models/listingsModel.js";
 import mongoose from "mongoose";
+import User from "../models/userModel.js";
+import { verifyToken } from "../utils/jwt.js";
 
 //GET - get all reservations
 
@@ -47,16 +49,29 @@ export const createReservation = async (req, res) => {
       .status(400)
       .json({ error: "Please fill in all the fields", emptyFields });
   }
+
   try {
+    const token = await req.cookies.jwt;
+    const verifiedToken = verifyToken(token);
+    const user = verifiedToken.id;
+
     // Validate listing ID
     if (!mongoose.Types.ObjectId.isValid(listing)) {
       return res.status(400).json({ error: "Invalid listing ID" });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(user)) {
+      return res.status(400).json({ error: "Invalid user ID" });
     }
 
     // Check if the listing exists
     const listingData = await Listings.findById(listing);
     if (!listingData) {
       return res.status(404).json({ error: "Listing does not exist" });
+    }
+    const userData = await User.findById(user);
+    if (!userData) {
+      return res.status(404).json({ error: "User does not exist" });
     }
 
     // Ensure listing is available
@@ -112,13 +127,15 @@ export const createReservation = async (req, res) => {
     // Create the reservation
     const reservation = await Reservations.create({
       listing,
+      user,
       start: startDate,
       end: endDate,
+      status: "pending",
     });
 
     // Mark listing as unavailable if the reservation is created
-    listingData.available = false;
-    await listingData.save();
+    // listingData.available = false;
+    // await listingData.save();
 
     res.status(200).json(reservation);
   } catch (error) {
@@ -229,4 +246,19 @@ export const deleteReservation = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+};
+
+export const getReservationsByListingId = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Invalid ID" });
+  }
+
+  const reservations = await Reservations.find({ listing: id });
+  if (!reservations) {
+    return res.status(404).json({ error: "No such reservation" });
+  }
+
+  res.status(200).json(reservations);
 };
