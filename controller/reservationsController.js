@@ -5,12 +5,31 @@ import User from "../models/userModel.js";
 import { verifyToken } from "../utils/jwt.js";
 
 //GET - get all reservations
-
 export const getReservations = async (req, res) => {
-  const reservations = await Reservations.find({}).sort({
-    createdAt: -1,
-  });
-  res.status(200).json(reservations);
+  try {
+    const token = req.cookies.jwt;
+    const verifiedToken = verifyToken(token);
+
+    if (verifiedToken.role === "admin") {
+      const reservations = await Reservations.find({})
+        .sort({ createdAt: -1 })
+        .populate({
+          path: "user",
+          select: "-password",
+        });
+
+      return res.status(200).json(reservations);
+    }
+
+    const reservations = await Reservations.find(
+      {},
+      { user: 0, status: 0 }
+    ).sort({ createdAt: -1 });
+
+    return res.status(200).json(reservations);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 //GET - get a single reservation
@@ -27,6 +46,24 @@ export const getReservation = async (req, res) => {
   }
 
   res.status(200).json(reservation);
+};
+
+export const getMyReservations = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const verifiedToken = verifyToken(token);
+
+    if (!mongoose.Types.ObjectId.isValid(verifiedToken.id)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    const reservations = await Reservations.find({ user: verifiedToken.id });
+
+    return res.status(200).json(reservations);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 //POST - create new reservation

@@ -6,14 +6,11 @@ import requireAdminAuthorization from "../middleware/authorizationMiddleware.js"
 const router = express.Router();
 
 // GET - get all reservations
-router.get(
-  "/",
-  requireAuth,
-  requireAdminAuthorization,
-  controller.getReservations
-);
+router.get("/", requireAuth, controller.getReservations);
 
 router.get("/listing/:id", requireAuth, controller.getReservationsByListingId);
+
+router.get("/me", requireAuth, controller.getMyReservations);
 
 // GET - get a single reservation
 router.get("/:id", requireAuth, controller.getReservation);
