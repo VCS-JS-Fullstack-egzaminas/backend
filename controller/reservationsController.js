@@ -16,7 +16,8 @@ export const getReservations = async (req, res) => {
         .populate({
           path: "user",
           select: "-password",
-        });
+        })
+        .populate("listing");
 
       return res.status(200).json(reservations);
     }
@@ -57,7 +58,9 @@ export const getMyReservations = async (req, res) => {
       return res.status(400).json({ error: "Invalid user ID" });
     }
 
-    const reservations = await Reservations.find({ user: verifiedToken.id });
+    const reservations = await Reservations.find({
+      user: verifiedToken.id,
+    }).populate("listing");
 
     return res.status(200).json(reservations);
   } catch (error) {
