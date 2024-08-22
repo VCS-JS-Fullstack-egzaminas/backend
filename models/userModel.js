@@ -55,11 +55,25 @@ userSchema.post("save", function (error, doc, next) {
 // Static signup method
 userSchema.statics.signup = async function (email, password, username) {
   if (!email || !password || !username) {
-    throw Error("Visi laukeliai yra privalomi.");
+    throw Error("All fields are required.");
   }
+
+  const userEmail = await this.findOne({ email });
+
+  if (userEmail) {
+    throw Error("Email is already in use.");
+  }
+
+  const userUsername = await this.findOne({ username });
+
+  if (userUsername) {
+    throw Error("Username is already in use.");
+  }
+
   if (!validator.isEmail(email)) {
-    throw Error("El. paštas neteisingas.");
+    throw Error("Email address is incorrect.");
   }
+
   if (
     !validator.isStrongPassword(password, {
       minLength: 5,
@@ -68,7 +82,7 @@ userSchema.statics.signup = async function (email, password, username) {
       minSymbols: 0,
     })
   ) {
-    throw Error("Slaptažodis pernelyg silpnas.");
+    throw Error("Password is too weak.");
   }
 
   const user = await this.create({
