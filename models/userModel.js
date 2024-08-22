@@ -84,17 +84,18 @@ userSchema.statics.signup = async function (email, password, username) {
 // Static login method
 userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
-    throw Error("Visi laukeliai privalomi.");
+    throw Error("Please fill in your email and password.");
   }
 
   const user = await this.findOne({ email });
+
   if (!user) {
-    throw Error("El. paštas neteisingas.");
+    throw Error("Check your email address.");
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    throw Error("Įvestas neteisingas slaptažodis.");
+    throw Error("Password is incorrect.");
   }
 
   return user;
