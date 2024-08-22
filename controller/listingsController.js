@@ -1,5 +1,6 @@
 import Listings from "../models/listingsModel.js";
 import mongoose from "mongoose";
+import Reservations from "../models/reservationsModel.js";
 
 //GET - get all listings
 export const getListings = async (req, res) => {
@@ -39,7 +40,7 @@ export const createListing = async (req, res) => {
     year,
     size,
     transmission,
-    fuelType
+    fuelType,
   } = req.body;
   let emptyFields = [];
 
@@ -80,7 +81,6 @@ export const createListing = async (req, res) => {
     emptyFields.push("fuelType");
   }
 
-
   if (emptyFields.length > 0) {
     return res
       .status(400)
@@ -99,7 +99,7 @@ export const createListing = async (req, res) => {
       year,
       size,
       transmission,
-      fuelType
+      fuelType,
     });
     res.status(200).json(listing);
   } catch (error) {
@@ -130,9 +130,13 @@ export const deleteListing = async (req, res) => {
   }
 
   const listing = await Listings.findOneAndDelete({ _id: id });
+
   if (!listing) {
     return res.status(404).json({ error: "No such listing" });
   }
+
+  const reservations = await Reservations.deleteMany({ listing: listing._id });
+  console.log(reservations);
 
   res.status(200).json(listing);
 };

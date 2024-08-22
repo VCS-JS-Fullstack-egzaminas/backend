@@ -264,23 +264,25 @@ export const deleteReservation = async (req, res) => {
   try {
     const reservation = await Reservations.findOneAndDelete({ _id: id });
 
+    // console.log(reservation);
+
     if (!reservation) {
       return res.status(404).json({ error: "No such reservation" });
     }
 
     // After deleting the reservation, check if any other reservations exist for the listing.
     // If no other reservations exist, mark the listing as available.
-    const existingReservations = await Reservations.findOne({
-      listing: reservation.listing,
-    });
+    // const existingReservations = await Reservations.findOne({
+    //   listing: reservation.listing,
+    // });
 
-    if (!existingReservations) {
-      const listingData = await Listings.findById(reservation.listing);
-      if (listingData) {
-        listingData.available = true;
-        await listingData.save();
-      }
-    }
+    // if (!existingReservations) {
+    //   const listingData = await Listings.findById(reservation.listing);
+    //   if (listingData) {
+    //     listingData.available = true;
+    //     await listingData.save();
+    //   }
+    // }
 
     res.status(200).json(reservation);
   } catch (error) {
